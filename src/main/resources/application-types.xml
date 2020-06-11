@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="Test_json" format="json">
+      <types:shape format="weave" example="examples/Sample_Currency.json"><![CDATA[%dw 2.0
+
+type Test_json = Array<{|  CurrencyName: String,   CurrencySymbol: String,   Country: String|}> {"example": "[{\\\"CurrencyName\\\":\\\"Dollar\\\",\\\"CurrencySymbol\\\":\\\"\$\\\",\\\"Country\\\":\\\"USA\\\"},{\\\"CurrencyName\\\":\\\"CAD\\\",\\\"CurrencySymbol\\\":\\\"\$\\\",\\\"Country\\\":\\\"Canadian\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="Sample_Test" format="json">
+      <types:shape format="weave" example="examples/Sample_data.json"><![CDATA[%dw 2.0
+
+type Sample_Test = {|
+  status: Boolean, 
+  data: Array<{|    id: Number {"typeId": "int"},     area_code: String,     admin_area: String,     province_state: String,     country_region: String,     last_update: String,     la: String,     lo: String,     confirmed: Number {"typeId": "int"},     death: Number {"typeId": "int"},     recovered: Number {"typeId": "int"},     active: Number {"typeId": "int"},     combined_key: String  |}>
+|} {"example": "{\\\"status\\\":true,\\\"data\\\":[{\\\"id\\\":222359,\\\"area_code\\\":\\\"\\\",\\\"admin_area\\\":\\\"\\\",\\\"province_state\\\":\\\"\\\",\\\"country_region\\\":\\\"India\\\",\\\"last_update\\\":\\\"05-28-2020\\\",\\\"la\\\":\\\"20.593684\\\",\\\"lo\\\":\\\"78.96288\\\",\\\"confirmed\\\":165386,\\\"death\\\":4711,\\\"recovered\\\":70920,\\\"active\\\":89755,\\\"combined_key\\\":\\\"India\\\"},{\\\"id\\\":218839,\\\"area_code\\\":\\\"\\\",\\\"admin_area\\\":\\\"\\\",\\\"province_state\\\":\\\"\\\",\\\"country_region\\\":\\\"India\\\",\\\"last_update\\\":\\\"05-27-2020\\\",\\\"la\\\":\\\"20.593684\\\",\\\"lo\\\":\\\"78.96288\\\",\\\"confirmed\\\":158086,\\\"death\\\":4534,\\\"recovered\\\":67749,\\\"active\\\":85803,\\\"combined_key\\\":\\\"India\\\"},{\\\"id\\\":215425,\\\"area_code\\\":\\\"\\\",\\\"admin_area\\\":\\\"\\\",\\\"province_state\\\":\\\"\\\",\\\"country_region\\\":\\\"India\\\",\\\"last_update\\\":\\\"05-26-2020\\\",\\\"la\\\":\\\"20.593684\\\",\\\"lo\\\":\\\"78.96288\\\",\\\"confirmed\\\":150793,\\\"death\\\":4344,\\\"recovered\\\":64277,\\\"active\\\":82172,\\\"combined_key\\\":\\\"India\\\"}]}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#6d857830-747b-4cf7-af98-4890430596e4">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="Sample_Test"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="Sample_Test"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

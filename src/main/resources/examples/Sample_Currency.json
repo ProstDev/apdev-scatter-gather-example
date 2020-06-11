@@ -1,0 +1,9 @@
+[{
+"CurrencyName" : "Dollar",
+"CurrencySymbol": "$",
+"Country": "USA"
+},
+{"CurrencyName" : "$CAD",
+"CurrencySymbol": "$",
+"Country": "Canadian"}
+]

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2e90c00a-52d5-4446-8873-0f7ed5a2799c" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<wsc:config name="Web_Service_Consumer_Config" doc:name="Web Service Consumer Config" doc:id="ec074189-3644-48e8-8a76-9db8439acf50" >
+		<wsc:connection wsdlLocation="http://www.xignite.com/xCurrencies.asmx?wsdl" service="XigniteCurrencies" port="XigniteCurrenciesSoap12" address="http://www.xignite.com/xCurrencies.asmx" >
+			<wsc:web-service-security actor="http://schemas.xmlsoap.org/soap/actor/next" />
+		</wsc:connection>
+	</wsc:config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="c8eb776a-7ad7-4dff-96a7-72ee2b636b29" >
+		<http:request-connection host="global.covid19uk.live" port="80" />
+	</http:request-config>
+	<flow name="Scatter-Gather-Test" doc:id="935b40a1-ff2a-42dc-9ae1-7582ae6d395c" >
+		<http:listener doc:name="Listener" doc:id="28367bf3-d88f-44b7-8588-2e90765a8a73" config-ref="HTTP_Listener_config" path="/TestScatterGather" allowedMethods="GET"/>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="905db6e8-0620-49fd-9758-d19face32c9e" >
+			<route >
+				<flow-ref doc:name="FlowOne" doc:id="ccc96be7-ebd6-4951-bfee-0e8dd01f3891" name="FlowOne"/>
+			</route>
+			<route >
+				<flow-ref doc:name="FlowTwo" doc:id="0c0ddba9-eba4-42ef-b1d9-0063b5749e34" name="FlowTwo"/>
+			</route>
+			<route >
+				<flow-ref doc:name="FlowThree" doc:id="52b4798d-2777-4f3f-8b0b-745372a1f272" name="FlowThree"/>
+			</route>
+		</scatter-gather>
+		<logger level="INFO" doc:name="Logger" doc:id="7d031c30-e6b7-47df-ad39-b639aad494c7" message="#[%dw 2.0
+output application/json
+---
+payload]" />
+		<ee:transform doc:name="Transform Message" doc:id="3e84b6d3-9272-427d-891c-cd63ae73565f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+flatten(payload..payload)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="e1f6e37f-8cd2-48ad-a5d9-7970c8f0cab8" />
+	</flow>
+	<sub-flow name="FlowOne" doc:id="132faa68-d296-4567-90a7-dc733acc8276" >
+		<set-payload value='#[%dw 2.0
+output application/json
+---
+{
+	"result1" : " FlowOneResult"
+}]' doc:name="FlowOnePayload" doc:id="c5486dd1-6668-407d-a592-5d8bbfc8325f" />
+	</sub-flow>
+	<sub-flow name="FlowTwo" doc:id="0853ac27-db89-466c-b106-6578028696dd" >
+		<set-payload value='#[%dw 2.0
+output application/json
+---
+{
+	"result2" : " FlowTwoResult"
+}]' doc:name="FlowTwoPayload" doc:id="bf1cbf04-c8b0-499f-97f3-c146b35be5bb" />
+	</sub-flow>
+	<sub-flow name="FlowThree" doc:id="73f3fb03-edc8-4485-8606-648fc96fdcb2" >
+		<set-payload value='#[%dw 2.0
+output application/json
+---
+{
+	"result3" : " FlowThreeResult"
+}]' doc:name="FlowThreePayload" doc:id="70b95fd0-2bb2-4f16-bb8f-17b613f6990c" />
+	</sub-flow>
+</mule>
